@@ -22,12 +22,14 @@ define git::clone ( $from, $ensure = present, $owner = root, $group = root ) {
     # it's in git anyway
     force   => true,
   }
-  
-  exec { "git clone $name":
-    subscribe   => File[$name],
-    command     => "/usr/bin/git clone '${from}' '${name}'",
-    # onlyif this is NOT a valid git repository
-    unless      => "bash -c '( cd \"$name\" && git status )'",
+
+  if $ensure == present {
+    exec { "git clone $name":
+      subscribe   => File[$name],
+      command     => "/usr/bin/git clone '${from}' '${name}'",
+      # onlyif this is NOT a valid git repository
+      unless      => "/usr/bin/env test -d '${name}/.git'",
+    }
   }
   
 }
