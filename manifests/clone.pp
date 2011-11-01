@@ -18,6 +18,9 @@ define git::clone ( $from, $ensure = present, $owner = root, $group = root ) {
     owner   => $owner,
     group   => $group,
     recurse => true,
+    # in case this ressource needs to be absent, we make sure it will be;
+    # it's in git anyway
+    force   => true,
   }
   
   exec { "git clone $name":
