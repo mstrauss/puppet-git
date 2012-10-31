@@ -37,7 +37,7 @@ define git::clone ( $from, $ensure = present, $owner = root, $group = root ) {
     # fix owner/group in a more resource-saving way (fresh clones only!)
     exec { "chown on ${name}":
       refreshonly => true,    # only on fresh clones!
-      subscribe => exec["git clone ${name}"],
+      subscribe => Exec["git clone ${name}"],
       command   => "/bin/chown -Rc ${owner}:${group} '${name}'",
       unless    => "/usr/bin/test -z \$( /usr/bin/find '${name}' ! -user ${owner} -or ! -group ${group} )",
     }
